@@ -15,6 +15,7 @@ def result():
     sql2 = "SELECT Content2 from table2 ORDER BY rand() limit 1"
     sql3 = "SELECT Content3 from table3 ORDER BY rand() limit 1"
     cursor = db.cursor()
+    cursor.execute("SET NAMES UTF8")
     cursor.execute(sql1); r1 = cursor.fetchall()
     r2=cursor.execute(sql2); r2 = cursor.fetchall()
     r3=cursor.execute(sql3); r3 = cursor.fetchall()
@@ -25,14 +26,15 @@ def result():
     #db.query = sql
     all_data = r1[0] + r2[0] + r3[0]
     for data in all_data:
-        try:
-            alldata_encode.append(data.encode('utf-8'))
-        except UnicodeDecodeError:
-            # alldata_encode.append("xxxxxx")
- 	    alldata_encode.append(unicode(data, errors='replace'))
-	    # alldata_encode.append(data.decode('gb2312').encode('utf-8'))
+	alldata_encode.append(data.encode('utf-8'))
+#         try:
+#             alldata_encode.append(data.encode('utf-8'))
+#         except UnicodeDecodeError:
+#             # alldata_encode.append("xxxxxx")
+#  	    alldata_encode.append(unicode(data, errors='replace'))
+# 	    # alldata_encode.append(data.decode('gb2312').encode('utf-8'))
     return jsonify({
-        # 'result':alldata_encode
+        # 'result': all_data[0] + all_data[1] + all_data[2]
 	# 'result': alldata_encode[0] + alldata_encode[1] + alldata_encode[2]
 	'result': alldata_encode[0] + alldata_encode[1] + alldata_encode[2]
     })
