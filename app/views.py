@@ -2,6 +2,10 @@
 
 from flask import render_template,Flask,jsonify
 from app import app, db, basedir
+import sys  
+
+reload(sys)  
+sys.setdefaultencoding('utf8')
     
 @app.route('/result/',  methods=['GET'])
 def result():
@@ -14,14 +18,21 @@ def result():
     cursor.execute(sql1); r1 = cursor.fetchall()
     r2=cursor.execute(sql2); r2 = cursor.fetchall()
     r3=cursor.execute(sql3); r3 = cursor.fetchall()
-    alldata = r1[0] + r2[0] + r3[0]
-    for data in alldata:
-        try:
-            alldata_encode.append(data.decode('utf-8'))
-        except UnicodeDecodeError:
-            pass
+    # try:
+    #     r1[0].encode('utf-8')
+    # except UnicodeDecodeError:
+    #     pass
     #db.query = sql
+    all_data = r1[0] + r2[0] + r3[0]
+    for data in all_data:
+        try:
+            alldata_encode.append(data.encode('utf-8'))
+        except UnicodeDecodeError:
+            # alldata_encode.append("xxxxxx")
+ 	    alldata_encode.append(unicode(data, errors='replace'))
+	    # alldata_encode.append(data.decode('gb2312').encode('utf-8'))
     return jsonify({
         # 'result':alldata_encode
+	# 'result': alldata_encode[0] + alldata_encode[1] + alldata_encode[2]
 	'result': alldata_encode[0] + alldata_encode[1] + alldata_encode[2]
     })
